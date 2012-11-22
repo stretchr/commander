@@ -151,7 +151,9 @@ func mapSubmatchNames(submatchNames []string, submatches []string) map[string]st
 	var mappedSubexpNames = make(map[string]string)
 
 	for i := 1; i < len(submatchNames); i++ {
-		mappedSubexpNames[submatchNames[i]] = submatches[i]
+		if submatches[i] != "" {
+			mappedSubexpNames[submatchNames[i]] = submatches[i]
+		}
 	}
 
 	return mappedSubexpNames

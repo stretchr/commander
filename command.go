@@ -26,6 +26,9 @@ func makeCommand(definition string) *command {
 
 	for argumentIndex, value := range strings.Split(definition, DelimiterArgumentSeparator) {
 		c.arguments[argumentIndex] = makeArgument(value)
+		if c.arguments[argumentIndex].isVariable() && argumentIndex != len(argumentStrings)-1 {
+			return nil
+		}
 	}
 
 	return c
@@ -37,6 +40,15 @@ func (c *command) represents(rawArgs []string) bool {
 
 	argIndex := 0
 	for rawArgIndex, _ := range rawArgs {
+
+		if argIndex == len(c.arguments)-1 && rawArgIndex != len(rawArgs)-1 {
+			if !c.arguments[argIndex].isVariable() {
+				return false
+			} else {
+				return true
+			}
+		}
+
 		// this is an optional argument. If we don't get a match, keep trying
 		if c.arguments[argIndex].isOptional() {
 			if c.arguments[argIndex].represents(rawArgs[rawArgIndex]) {
