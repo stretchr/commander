@@ -25,7 +25,7 @@ func makeCommand(definition string) *command {
 	c.arguments = make([]*argument, len(argumentStrings))
 
 	for argumentIndex, value := range strings.Split(definition, DelimiterArgumentSeparator) {
-		c.arguments[argumentIndex] = MakeArgument(value)
+		c.arguments[argumentIndex] = makeArgument(value)
 	}
 
 	return c

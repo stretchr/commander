@@ -22,6 +22,6 @@ func TestCommand_makeCommand(t *testing.T) {
 	assert.Equal(t, c.arguments[2].captureType, "string")
 	assert.Equal(t, c.arguments[3].identifier, "description")
 	assert.Equal(t, c.arguments[3].captureType, "string")
-	assert.True(t, c.arguments[3].IsOptional())
-	assert.True(t, c.arguments[3].IsVariable())
+	assert.True(t, c.arguments[3].isOptional())
+	assert.True(t, c.arguments[3].isVariable())
 }

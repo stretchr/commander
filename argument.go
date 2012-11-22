@@ -2,7 +2,9 @@ package commander
 
 import (
 	"regexp"
+	"strconv"
 	"strings"
+	"time"
 )
 
 /*
@@ -43,26 +45,13 @@ type argument struct {
 	captureType string
 
 	// isOptional is a bool used to determine if this argument is optional
-	isOptional bool
+	optional bool
 
 	// isVariable is a bool used to determine if this argument is variable
-	isVariable bool
+	variable bool
 }
 
-// MapSubmatchNames creates a map of named matches and their contents
-func MapSubmatchNames(submatchNames []string, submatches []string) map[string]string {
-
-	var mappedSubexpNames = make(map[string]string)
-
-	for i := 1; i < len(submatchNames); i++ {
-		mappedSubexpNames[submatchNames[i]] = submatches[i]
-	}
-
-	return mappedSubexpNames
-
-}
-
-// ContainsString determines if a map[string]string contains string key
+// containsKey determines if a map[string]string contains string key
 func containsKey(stringMap map[string]string, key string) bool {
 
 	if _, ok := stringMap[key]; ok {
@@ -72,14 +61,100 @@ func containsKey(stringMap map[string]string, key string) bool {
 
 }
 
-func MakeArgument(rawArg string) *argument {
+// constainsString determines if a []string contains string
+func containsString(stringSlice []string, contains string) bool {
 
-	a := new(argument)
-	a.rawArg = rawArg
+	for _, value := range stringSlice {
+		if value == contains {
+			return true
+		}
+	}
+	return false
 
-	a.parseArgument()
+}
 
-	return a
+// canCastToType determines if the cmdArg can be cast to a given type
+func canCastToType(cmdArg string, castType string) bool {
+
+	switch castType {
+	case "string":
+		return true
+	case "int":
+		if _, err := strconv.ParseInt(cmdArg, 10, 0); err != nil {
+			return false
+		}
+		return true
+	case "int64":
+		if _, err := strconv.ParseInt(cmdArg, 10, 64); err != nil {
+			return false
+		}
+		return true
+	case "uint":
+		if _, err := strconv.ParseUint(cmdArg, 10, 0); err != nil {
+			return false
+		}
+		return true
+	case "uint64":
+		if _, err := strconv.ParseUint(cmdArg, 10, 64); err != nil {
+			return false
+		}
+		return true
+	case "bool":
+		if _, err := strconv.ParseBool(cmdArg); err != nil {
+			return false
+		}
+		return true
+	case "time":
+		if _, err := time.Parse(time.ANSIC, cmdArg); err == nil {
+			return true
+		}
+		if _, err := time.Parse(time.UnixDate, cmdArg); err == nil {
+			return true
+		}
+		if _, err := time.Parse(time.RubyDate, cmdArg); err == nil {
+			return true
+		}
+		if _, err := time.Parse(time.RFC822, cmdArg); err == nil {
+			return true
+		}
+		if _, err := time.Parse(time.RFC822Z, cmdArg); err == nil {
+			return true
+		}
+		if _, err := time.Parse(time.RFC850, cmdArg); err == nil {
+			return true
+		}
+		if _, err := time.Parse(time.RFC1123, cmdArg); err == nil {
+			return true
+		}
+		if _, err := time.Parse(time.RFC1123Z, cmdArg); err == nil {
+			return true
+		}
+		if _, err := time.Parse(time.RFC3339, cmdArg); err == nil {
+			return true
+		}
+		if _, err := time.Parse(time.RFC3339Nano, cmdArg); err == nil {
+			return true
+		}
+		if _, err := time.Parse(time.Kitchen, cmdArg); err == nil {
+			return true
+		}
+		return false
+	}
+
+	return false
+
+}
+
+// mapSubmatchNames creates a map of named matches and their contents
+func mapSubmatchNames(submatchNames []string, submatches []string) map[string]string {
+
+	var mappedSubexpNames = make(map[string]string)
+
+	for i := 1; i < len(submatchNames); i++ {
+		mappedSubexpNames[submatchNames[i]] = submatches[i]
+	}
+
+	return mappedSubexpNames
 
 }
 
@@ -96,47 +171,73 @@ func (a *argument) parseArgument() {
 		a.list = strings.Split(parts[1], DelimiterListItems)
 	case captureRegex.MatchString(a.rawArg):
 		submatches := captureRegex.FindStringSubmatch(a.rawArg)
-		submatchMap := MapSubmatchNames(captureSubmatchNames, submatches)
+		submatchMap := mapSubmatchNames(captureSubmatchNames, submatches)
 
 		a.identifier = submatchMap[SubmatchKeyKind]
 		a.captureType = submatchMap[SubmatchKeyType]
 
-		if containsKey(submatchMap, SubmatchKeyOpen) && containsKey(submatchMap, SubmatchKeyClose) {
-			a.isOptional = true
+		if containsKey(submatchMap, "open") && containsKey(submatchMap, "close") {
+			a.optional = true
 		}
-		if containsKey(submatchMap, SubmatchKeyVariable) {
-			a.isVariable = true
+		if containsKey(submatchMap, "variable") {
+			a.variable = true
 		}
 	}
 
 }
 
-func (a *argument) IsLiteral() bool {
+func makeArgument(rawArg string) *argument {
+
+	a := new(argument)
+	a.rawArg = rawArg
+
+	a.parseArgument()
+
+	return a
+
+}
+
+func (a *argument) represents(cmdArg string) bool {
+
+	switch {
+	case a.isLiteral() && a.literal == cmdArg:
+		return true
+	case a.isList() && containsString(a.list, cmdArg):
+		return true
+	case a.isCapture() && canCastToType(cmdArg, a.captureType):
+		return true
+	}
+
+	return false
+
+}
+
+func (a *argument) isLiteral() bool {
 
 	return len(a.literal) != 0
 
 }
 
-func (a *argument) IsList() bool {
+func (a *argument) isList() bool {
 
 	return a.identifier != "" && len(a.list) > 0
 
 }
 
-func (a *argument) IsCapture() bool {
+func (a *argument) isCapture() bool {
 
 	return a.identifier != "" && a.captureType != ""
 
 }
 
-func (a *argument) IsOptional() bool {
+func (a *argument) isOptional() bool {
 
-	return a.isOptional
+	return a.optional
 
 }
 
-func (a *argument) IsVariable() bool {
+func (a *argument) isVariable() bool {
 
-	return a.isVariable
+	return a.variable
 
 }
