@@ -6,7 +6,7 @@ import (
 
 // command is a type used to create and manage individual command strings
 type command struct {
-	// definition is the string contining the command definition
+	// definition is the original string contining the command definition
 	definition string
 
 	// arguments is an array of all the arguments in the command string
