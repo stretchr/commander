@@ -27,7 +27,7 @@ func makeCommand(definition string) *command {
 	for argumentIndex, value := range strings.Split(definition, DelimiterArgumentSeparator) {
 		c.arguments[argumentIndex] = makeArgument(value)
 		if c.arguments[argumentIndex].isVariable() && argumentIndex != len(argumentStrings)-1 {
-			return nil
+			panic("A variable argument may only appear at the end of a command string")
 		}
 	}
 

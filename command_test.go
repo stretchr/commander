@@ -42,9 +42,10 @@ func TestCommand_makeCommand(t *testing.T) {
 		assert.True(t, c.arguments[3].isVariable())
 	}
 
-	c = makeCommand(commandStringTwoOptionalVariableBad)
+	assert.Panics(t, func() {
+		_ = makeCommand(commandStringTwoOptionalVariableBad)
+	})
 
-	assert.Nil(t, c)
 }
 
 func TestCommand_Represents(t *testing.T) {
