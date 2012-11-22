@@ -21,10 +21,10 @@ func makeCommand(definition string) *command {
 
 	// make the arguments
 
-	argumentStrings := strings.Split(definition, " ")
+	argumentStrings := strings.Split(definition, DelimiterArgumentSeparator)
 	c.arguments = make([]*argument, len(argumentStrings))
 
-	for argumentIndex, value := range strings.Split(definition, " ") {
+	for argumentIndex, value := range strings.Split(definition, DelimiterArgumentSeparator) {
 		c.arguments[argumentIndex] = MakeArgument(value)
 	}
 
