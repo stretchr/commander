@@ -12,9 +12,17 @@ var PathSegmentRegex = regexp.MustCompile(PathSegmentRegexString)
 */
 
 var (
-	literalRegex         = regexp.MustCompile(`^[^=|()\[\]]+$`)
-	listRegex            = regexp.MustCompile(`^[^=|()\[\]]+=[^=|()\[\]]+(?:\|[^=|()\[\]]+)+$`)
-	captureRegex         = regexp.MustCompile(`^(?P<open>[\[])?(?P<kind>[^=|()\[\]]+)=\((?P<type>[^=|()\[\]]+)\)(?P<variable>\.\.\.)?(?P<close>[\]])?$`)
+	// literalRegex represents the regexp object for literals.
+	literalRegex = regexp.MustCompile(`^[^=|()\[\]]+$`)
+
+	// listRegex represents the regexp for lists
+	listRegex = regexp.MustCompile(`^[^=|()\[\]]+=[^=|()\[\]]+(?:\|[^=|()\[\]]+)+$`)
+
+	// captureRegex represents the regexp for captures.
+	// TODO: Is there an easy way to use the constants in this string too?
+	captureRegex = regexp.MustCompile(`^(?P<open>[\[])?(?P<kind>[^=|()\[\]]+)=\((?P<type>[^=|()\[\]]+)\)(?P<variable>\.\.\.)?(?P<close>[\]])?$`)
+
+	// captureSubmatchNames represents the regexp for capture sub matches.
 	captureSubmatchNames = captureRegex.SubexpNames()
 )
 
@@ -83,20 +91,20 @@ func (a *argument) parseArgument() {
 	case literalRegex.MatchString(a.rawArg):
 		a.literal = a.rawArg
 	case listRegex.MatchString(a.rawArg):
-		parts := strings.Split(a.rawArg, "=")
+		parts := strings.Split(a.rawArg, DelimiterEquality)
 		a.identifier = parts[0]
-		a.list = strings.Split(parts[1], "|")
+		a.list = strings.Split(parts[1], DelimiterListItems)
 	case captureRegex.MatchString(a.rawArg):
 		submatches := captureRegex.FindStringSubmatch(a.rawArg)
 		submatchMap := MapSubmatchNames(captureSubmatchNames, submatches)
 
-		a.identifier = submatchMap["kind"]
-		a.captureType = submatchMap["type"]
+		a.identifier = submatchMap[SubmatchKeyKind]
+		a.captureType = submatchMap[SubmatchKeyType]
 
-		if containsKey(submatchMap, "open") && containsKey(submatchMap, "close") {
+		if containsKey(submatchMap, SubmatchKeyOpen) && containsKey(submatchMap, SubmatchKeyClose) {
 			a.isOptional = true
 		}
-		if containsKey(submatchMap, "variable") {
+		if containsKey(submatchMap, SubmatchKeyVariable) {
 			a.isVariable = true
 		}
 	}
