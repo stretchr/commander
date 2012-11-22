@@ -2,15 +2,30 @@ package commander
 
 import (
 	"github.com/stretchrcom/testify/assert"
+	"strings"
 	"testing"
+)
+
+const (
+	commandString            = "create kind=project|account name=(string) [description=(string)...]"
+	commandStringTwoOptional = "create kind=project|account name=(string) [description=(string)...] [domain=(string)]"
+	rawCommandStringOne      = "create project stretchr"
+	rawCommandStringTwo      = "create account mat"
+	rawCommandStringFour     = `create account mat "Crazy Brit!"`
+)
+
+var (
+	rawCommandArrayThree = []string{"create", "project", "stretchr", "Awesome service!"}
+	rawCommandArrayFour  = []string{"create", "account", "mat", "Crazy Brit!"}
+	rawCommandArrayFive  = []string{"create", "account", "mat", "Crazy Brit!", "localhost"}
 )
 
 func TestCommand_makeCommand(t *testing.T) {
 
-	c := makeCommand("create kind=project|account name=(string) [description=(string)...]")
+	c := makeCommand(commandString)
 
 	if assert.NotNil(t, c) {
-		assert.Equal(t, c.definition, "create kind=project|account name=(string) [description=(string)...]")
+		assert.Equal(t, c.definition, commandString)
 	}
 
 	assert.Equal(t, len(c.arguments), 4)
@@ -24,4 +39,23 @@ func TestCommand_makeCommand(t *testing.T) {
 	assert.Equal(t, c.arguments[3].captureType, "string")
 	assert.True(t, c.arguments[3].isOptional())
 	assert.True(t, c.arguments[3].isVariable())
+}
+
+func TestCommand_Represents(t *testing.T) {
+
+	c := makeCommand(commandString)
+
+	assert.True(t, c.represents(strings.Split(rawCommandStringOne, " ")))
+	assert.True(t, c.represents(strings.Split(rawCommandStringTwo, " ")))
+	assert.True(t, c.represents(rawCommandArrayThree))
+	assert.True(t, c.represents(rawCommandArrayFour))
+
+	c = makeCommand(commandStringTwoOptional)
+
+	assert.True(t, c.represents(strings.Split(rawCommandStringOne, " ")))
+	assert.True(t, c.represents(strings.Split(rawCommandStringTwo, " ")))
+	assert.True(t, c.represents(rawCommandArrayThree))
+	assert.True(t, c.represents(rawCommandArrayFour))
+	assert.True(t, c.represents(rawCommandArrayFive))
+
 }

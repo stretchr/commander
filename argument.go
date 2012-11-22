@@ -197,6 +197,7 @@ func makeArgument(rawArg string) *argument {
 
 }
 
+// represents determines if this argument represents the cmdArg string
 func (a *argument) represents(cmdArg string) bool {
 
 	switch {

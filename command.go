@@ -31,3 +31,29 @@ func makeCommand(definition string) *command {
 	return c
 
 }
+
+// represents determines if this command represents the array of arguments
+func (c *command) represents(rawArgs []string) bool {
+
+	argIndex := 0
+	for rawArgIndex, _ := range rawArgs {
+		// this is an optional argument. If we don't get a match, keep trying
+		if c.arguments[argIndex].isOptional() {
+			if c.arguments[argIndex].represents(rawArgs[rawArgIndex]) {
+				rawArgIndex++
+				argIndex++
+			} else {
+				rawArgIndex++
+			}
+		} else {
+			if c.arguments[argIndex].represents(rawArgs[rawArgIndex]) {
+				rawArgIndex++
+				argIndex++
+			} else {
+				return false
+			}
+		}
+	}
+	return true
+
+}
