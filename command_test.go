@@ -13,7 +13,6 @@ const (
 	commandStringTwoOptionalVariableBad = "create kind=project|account name=(string) [description=(string)...] [domains=(string)]"
 	rawCommandStringOne                 = "create project stretchr"
 	rawCommandStringTwo                 = "create account mat"
-	rawCommandStringFour                = `create account mat "Crazy Brit!"`
 )
 
 var (
