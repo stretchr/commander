@@ -7,6 +7,8 @@ import (
 
 func TestCommander_Map(t *testing.T) {
 
+	sharedCommander = new(Commander)
+
 	Map(commandString, func(map[string]interface{}) {
 	})
 
@@ -26,5 +28,22 @@ func TestCommander_Map(t *testing.T) {
 		Map(commandString, func(map[string]interface{}) {
 		})
 	})
+
+}
+
+func TestCommander_Execute(t *testing.T) {
+
+	sharedCommander = new(Commander)
+	args = []string{}
+
+	defaultRun := false
+
+	Map(DefaultCommand, func(map[string]interface{}) {
+		defaultRun = true
+	})
+
+	Execute()
+
+	assert.True(t, defaultRun)
 
 }

@@ -18,6 +18,9 @@ type command struct {
 
 	// handler is the Handler associated with this command
 	handler Handler
+
+	// defaultCommand holds whether this is the default command or not
+	defaultCommand bool
 }
 
 // makeCommand makes a new Command object and sets it up appropriately
@@ -30,6 +33,7 @@ func makeCommand(definition string, handler Handler) *command {
 	c := new(command)
 	c.definition = definition
 	c.handler = handler
+	c.defaultCommand = definition == DefaultCommand
 
 	// make the arguments
 
@@ -102,4 +106,8 @@ func (c *command) isEqualTo(cmd *command) bool {
 
 	return true
 
+}
+
+func (c *command) isDefaultCommand() bool {
+	return c.defaultCommand
 }
