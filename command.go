@@ -23,9 +23,15 @@ func makeCommand(definition string) *command {
 
 	argumentStrings := strings.Split(definition, DelimiterArgumentSeparator)
 	c.arguments = make([]*argument, len(argumentStrings))
+	optionalFound := false
 
 	for argumentIndex, value := range strings.Split(definition, DelimiterArgumentSeparator) {
 		c.arguments[argumentIndex] = makeArgument(value)
+		if !c.arguments[argumentIndex].isOptional() && optionalFound {
+			panic("An optional argument may not precede a required argument")
+		} else if c.arguments[argumentIndex].isOptional() {
+			optionalFound = true
+		}
 		if c.arguments[argumentIndex].isVariable() && argumentIndex != len(argumentStrings)-1 {
 			panic("A variable argument may only appear at the end of a command string")
 		}

@@ -8,6 +8,7 @@ import (
 
 const (
 	commandString                       = "create kind=project|account name=(string) [description=(string)...]"
+	commandStringOptionalBad            = "create kind=project|account [name=(string)] description=(string)"
 	commandStringTwoOptional            = "create kind=project|account name=(string) [description=(string)] [domain=(string)]"
 	commandStringTwoOptionalVariable    = "create kind=project|account name=(string) [description=(string)] [domains=(string)...]"
 	commandStringTwoOptionalVariableBad = "create kind=project|account name=(string) [description=(string)...] [domains=(string)]"
@@ -43,6 +44,10 @@ func TestCommand_makeCommand(t *testing.T) {
 
 	assert.Panics(t, func() {
 		_ = makeCommand(commandStringTwoOptionalVariableBad)
+	})
+
+	assert.Panics(t, func() {
+		_ = makeCommand(commandStringOptionalBad)
 	})
 
 }
