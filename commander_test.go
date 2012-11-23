@@ -12,4 +12,19 @@ func TestCommander_Map(t *testing.T) {
 
 	assert.Equal(t, len(sharedCommander.commands), 1)
 
+	Map(DefaultCommand, func(map[string]interface{}) {
+	})
+
+	assert.Equal(t, len(sharedCommander.commands), 2)
+
+	assert.Panics(t, func() {
+		Map(DefaultCommand, func(map[string]interface{}) {
+		})
+	})
+
+	assert.Panics(t, func() {
+		Map(commandString, func(map[string]interface{}) {
+		})
+	})
+
 }

@@ -24,6 +24,9 @@ var initOnce sync.Once
 // sharedCommander is the shared instance of the Commander type
 var sharedCommander *Commander
 
+// Map is used to map a definition string to a handler function. If the arguments
+// given on the command line are represented by the definition string, the
+// handler function will be called.
 func Map(definition string, handler Handler) {
 
 	initOnce.Do(func() {
@@ -39,6 +42,12 @@ func Map(definition string, handler Handler) {
 	}
 
 	newCommand := makeCommand(definition, handler)
+
+	for _, cmd := range sharedCommander.commands {
+		if cmd.isEqualTo(newCommand) {
+			panic("Each command must have a unique signature")
+		}
+	}
 
 	sharedCommander.commands = append(sharedCommander.commands, newCommand)
 
