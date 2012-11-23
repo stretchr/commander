@@ -23,9 +23,13 @@ var (
 	rawCommandArraySix   = []string{"create", "account", "mat", "Crazy Brit!", "localhost", "127.0.0.1", "google.com"}
 )
 
+func HandlerFunc(args map[string]interface{}) {
+
+}
+
 func TestCommand_makeCommand(t *testing.T) {
 
-	c := makeCommand(commandString)
+	c := makeCommand(commandString, HandlerFunc)
 
 	if assert.NotNil(t, c) {
 		assert.Equal(t, c.definition, commandString)
@@ -43,25 +47,29 @@ func TestCommand_makeCommand(t *testing.T) {
 	}
 
 	assert.Panics(t, func() {
-		_ = makeCommand(commandStringTwoOptionalVariableBad)
+		_ = makeCommand(commandStringTwoOptionalVariableBad, HandlerFunc)
 	})
 
 	assert.Panics(t, func() {
-		_ = makeCommand(commandStringOptionalBad)
+		_ = makeCommand(commandStringOptionalBad, HandlerFunc)
+	})
+
+	assert.Panics(t, func() {
+		_ = makeCommand(commandString, nil)
 	})
 
 }
 
 func TestCommand_Represents(t *testing.T) {
 
-	c := makeCommand(commandString)
+	c := makeCommand(commandString, HandlerFunc)
 
 	assert.True(t, c.represents(strings.Split(rawCommandStringOne, " ")))
 	assert.True(t, c.represents(strings.Split(rawCommandStringTwo, " ")))
 	assert.True(t, c.represents(rawCommandArrayThree))
 	assert.True(t, c.represents(rawCommandArrayFour))
 
-	c = makeCommand(commandStringTwoOptional)
+	c = makeCommand(commandStringTwoOptional, HandlerFunc)
 
 	assert.True(t, c.represents(strings.Split(rawCommandStringOne, " ")))
 	assert.True(t, c.represents(strings.Split(rawCommandStringTwo, " ")))
@@ -69,7 +77,7 @@ func TestCommand_Represents(t *testing.T) {
 	assert.True(t, c.represents(rawCommandArrayFour))
 	assert.True(t, c.represents(rawCommandArrayFive))
 
-	c = makeCommand(commandStringTwoOptionalVariable)
+	c = makeCommand(commandStringTwoOptionalVariable, HandlerFunc)
 
 	assert.True(t, c.represents(strings.Split(rawCommandStringOne, " ")))
 	assert.True(t, c.represents(strings.Split(rawCommandStringTwo, " ")))
