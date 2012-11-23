@@ -4,11 +4,18 @@ import (
 	"sync"
 )
 
+// Default is used to register a default command that will be run when no
+// arguments are given
+const DefaultCommand = ""
+
 // Commander provides methods and functionality to create a command line
 // interface quickly and easily.
 type Commander struct {
 	// commands contains all the mapped commands
 	commands []*command
+
+	// defaultRegistered stores whether a default has been registered or not
+	defaultRegistered bool
 }
 
 // initOnce is used to guarantee that the sharedCommander is initialized only once.
@@ -22,6 +29,14 @@ func Map(definition string, handler Handler) {
 	initOnce.Do(func() {
 		sharedCommander = new(Commander)
 	})
+
+	if definition == DefaultCommand {
+		if sharedCommander.defaultRegistered {
+			panic("Only one default command can be registered.")
+		} else {
+			sharedCommander.defaultRegistered = true
+		}
+	}
 
 	newCommand := makeCommand(definition, handler)
 
