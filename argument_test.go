@@ -21,6 +21,10 @@ const (
 	argOptionalVariableCaptureType = "[initialUsers=(string)...]"
 )
 
+var argArray = []string{argLiteral, argList, argListLong, argCaptureType,
+	argCaptureTypeInt, argCaptureTypeInt64, argCaptureTypeUint,
+	argCaptureTypeUint64, argCaptureTypeBool, argCaptureTypeTime}
+
 func TestArgument_MakeArgument(t *testing.T) {
 
 	a := makeArgument("rawArg")
@@ -186,4 +190,19 @@ func TestArgument_isVariable(t *testing.T) {
 
 	assert.True(t, a.isVariable())
 
+}
+
+func TestArgument_isEqualTo(t *testing.T) {
+
+	for i := 0; i < len(argArray); i++ {
+		for j := 0; j < len(argArray); j++ {
+			a := makeArgument(argArray[i])
+			a2 := makeArgument(argArray[j])
+			if argArray[i] == argArray[j] {
+				assert.True(t, a.isEqualTo(a2))
+			} else {
+				assert.False(t, a.isEqualTo(a2))
+			}
+		}
+	}
 }

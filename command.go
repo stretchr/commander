@@ -87,3 +87,19 @@ func (c *command) represents(rawArgs []string) bool {
 	return true
 
 }
+
+func (c *command) isEqualTo(cmd *command) bool {
+
+	if len(c.arguments) != len(cmd.arguments) {
+		return false
+	}
+
+	for i := 0; i < len(c.arguments); i++ {
+		if !c.arguments[i].isEqualTo(cmd.arguments[i]) {
+			return false
+		}
+	}
+
+	return true
+
+}

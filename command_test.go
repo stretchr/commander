@@ -21,6 +21,8 @@ var (
 	rawCommandArrayFour  = []string{"create", "account", "mat", "Crazy Brit!"}
 	rawCommandArrayFive  = []string{"create", "account", "mat", "Crazy Brit!", "localhost"}
 	rawCommandArraySix   = []string{"create", "account", "mat", "Crazy Brit!", "localhost", "127.0.0.1", "google.com"}
+
+	commandArray = []string{commandString, commandStringTwoOptional}
 )
 
 func HandlerFunc(args map[string]interface{}) {
@@ -85,5 +87,21 @@ func TestCommand_Represents(t *testing.T) {
 	assert.True(t, c.represents(rawCommandArrayFour))
 	assert.True(t, c.represents(rawCommandArrayFive))
 	assert.True(t, c.represents(rawCommandArraySix))
+
+}
+
+func TestCommand_IsEqualTo(t *testing.T) {
+
+	for i := 0; i < len(commandArray); i++ {
+		for j := 0; j < len(commandArray); j++ {
+			a := makeCommand(commandArray[i], HandlerFunc)
+			a2 := makeCommand(commandArray[j], HandlerFunc)
+			if commandArray[i] == commandArray[j] {
+				assert.True(t, a.isEqualTo(a2))
+			} else {
+				assert.False(t, a.isEqualTo(a2))
+			}
+		}
+	}
 
 }

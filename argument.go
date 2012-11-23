@@ -73,6 +73,19 @@ func containsString(stringSlice []string, contains string) bool {
 
 }
 
+// slicesAreEqual determines if two string slices are equal
+func slicesAreEqual(left, right []string) bool {
+	if len(left) != len(right) {
+		return false
+	}
+	for i := 0; i < len(left); i++ {
+		if left[i] != right[i] {
+			return false
+		}
+	}
+	return true
+}
+
 // canCastToType determines if the cmdArg can be cast to a given type
 func canCastToType(cmdArg string, castType string) bool {
 
@@ -217,7 +230,7 @@ func (a *argument) represents(cmdArg string) bool {
 
 func (a *argument) isLiteral() bool {
 
-	return len(a.literal) != 0
+	return a.literal != ""
 
 }
 
@@ -242,5 +255,20 @@ func (a *argument) isOptional() bool {
 func (a *argument) isVariable() bool {
 
 	return a.variable
+
+}
+
+func (a *argument) isEqualTo(arg *argument) bool {
+
+	switch {
+	case a.isLiteral() && arg.isLiteral():
+		return a.literal == arg.literal
+	case a.isList() && arg.isList():
+		return slicesAreEqual(a.list, arg.list)
+	case a.isCapture() && arg.isCapture():
+		return a.captureType == arg.captureType &&
+			a.identifier == arg.identifier
+	}
+	return false
 
 }
