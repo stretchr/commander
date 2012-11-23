@@ -87,74 +87,86 @@ func slicesAreEqual(left, right []string) bool {
 }
 
 // canCastToType determines if the cmdArg can be cast to a given type
-func canCastToType(cmdArg string, castType string) bool {
+func canCastToType(cmdArg, castType string) bool {
+	if castToType(cmdArg, castType) == nil {
+		return false
+	}
+	return true
+}
+
+func castToType(cmdArg, castType string) interface{} {
 
 	switch castType {
 	case "string":
-		return true
+		return cmdArg
 	case "int":
-		if _, err := strconv.ParseInt(cmdArg, 10, 0); err != nil {
-			return false
+		if value, err := strconv.ParseInt(cmdArg, 10, 0); err != nil {
+			return nil
+		} else {
+			return value
 		}
-		return true
 	case "int64":
-		if _, err := strconv.ParseInt(cmdArg, 10, 64); err != nil {
-			return false
+		if value, err := strconv.ParseInt(cmdArg, 10, 64); err != nil {
+			return nil
+		} else {
+			return value
 		}
-		return true
 	case "uint":
-		if _, err := strconv.ParseUint(cmdArg, 10, 0); err != nil {
-			return false
+		if value, err := strconv.ParseUint(cmdArg, 10, 0); err != nil {
+			return nil
+		} else {
+			return value
 		}
-		return true
 	case "uint64":
-		if _, err := strconv.ParseUint(cmdArg, 10, 64); err != nil {
-			return false
+		if value, err := strconv.ParseUint(cmdArg, 10, 64); err != nil {
+			return nil
+		} else {
+			return value
 		}
-		return true
 	case "bool":
-		if _, err := strconv.ParseBool(cmdArg); err != nil {
-			return false
+		if value, err := strconv.ParseBool(cmdArg); err != nil {
+			return nil
+		} else {
+			return value
 		}
-		return true
 	case "time":
-		if _, err := time.Parse(time.ANSIC, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.ANSIC, cmdArg); err == nil {
+			return value
 		}
-		if _, err := time.Parse(time.UnixDate, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.UnixDate, cmdArg); err == nil {
+			return value
 		}
-		if _, err := time.Parse(time.RubyDate, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.RubyDate, cmdArg); err == nil {
+			return value
 		}
-		if _, err := time.Parse(time.RFC822, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.RFC822, cmdArg); err == nil {
+			return value
 		}
-		if _, err := time.Parse(time.RFC822Z, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.RFC822Z, cmdArg); err == nil {
+			return value
 		}
-		if _, err := time.Parse(time.RFC850, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.RFC850, cmdArg); err == nil {
+			return value
 		}
-		if _, err := time.Parse(time.RFC1123, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.RFC1123, cmdArg); err == nil {
+			return value
 		}
-		if _, err := time.Parse(time.RFC1123Z, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.RFC1123Z, cmdArg); err == nil {
+			return value
 		}
-		if _, err := time.Parse(time.RFC3339, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.RFC3339, cmdArg); err == nil {
+			return value
 		}
-		if _, err := time.Parse(time.RFC3339Nano, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.RFC3339Nano, cmdArg); err == nil {
+			return value
 		}
-		if _, err := time.Parse(time.Kitchen, cmdArg); err == nil {
-			return true
+		if value, err := time.Parse(time.Kitchen, cmdArg); err == nil {
+			return value
 		}
-		return false
+		return nil
 	}
 
-	return false
+	return nil
 
 }
 
