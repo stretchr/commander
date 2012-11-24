@@ -86,3 +86,36 @@ func TestCommander_Execute(t *testing.T) {
 
 	called = false
 }
+
+func TestCommander_NoOptional(t *testing.T) {
+
+	sharedCommander = new(Commander)
+
+	Map(commandStringTwoOptionalVariable, func(args map[string]interface{}) {
+	})
+
+	incomingArgs = rawCommandArraySeven
+
+	assert.NotPanics(t, func() {
+		Execute()
+	})
+
+}
+
+func TestCommander_PrintUsage(t *testing.T) {
+
+	Initialize()
+
+	Map(commandString, func(args map[string]interface{}) {
+	})
+
+	Map(commandStringTwoOptionalVariable, func(args map[string]interface{}) {
+	})
+
+	incomingArgs = []string{"help"}
+
+	assert.NotPanics(t, func() {
+		Execute()
+	})
+
+}

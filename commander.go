@@ -1,7 +1,10 @@
 package commander
 
 import (
+	"fmt"
 	"os"
+	"path"
+	"strings"
 	"sync"
 )
 
@@ -36,6 +39,9 @@ var incomingArgs []string
 func commandMap(cmd *command, args []string) map[string]interface{} {
 	argMap := make(map[string]interface{})
 	for i, a := range cmd.arguments {
+		if len(args) <= i {
+			break
+		}
 		if !a.isLiteral() {
 			if !a.isVariable() {
 				argMap[a.identifier] = args[i]
@@ -51,14 +57,41 @@ func commandMap(cmd *command, args []string) map[string]interface{} {
 	return argMap
 }
 
+// printUsage prints the usage of the program
+func printUsage() {
+
+	appName := path.Base(os.Args[0])
+	if extension := path.Ext(os.Args[0]); extension != "" {
+		appName = strings.Replace(appName, extension, "", 1)
+	}
+
+	fmt.Printf("usage: %s <command> [arguments]\n\n", appName)
+
+	for _, cmd := range sharedCommander.commands {
+		fmt.Printf("\t %s\n", cmd.definition)
+	}
+
+}
+
+// Initialize sets up various internal fields to ready the system. If this is not
+// called, Commander will not function.
+func Initialize() {
+	initOnce.Do(func() {
+		sharedCommander = new(Commander)
+		Map("help [arg=(string)]", func(map[string]interface{}) {
+			printUsage()
+		})
+	})
+}
+
 // Map is used to map a definition string to a handler function. If the arguments
 // given on the command line are represented by the definition string, the
 // handler function will be called.
 func Map(definition string, handler Handler) {
 
-	initOnce.Do(func() {
-		sharedCommander = new(Commander)
-	})
+	if sharedCommander == nil {
+		panic("Initialize must be called before Map")
+	}
 
 	if definition == DefaultCommand {
 		if sharedCommander.defaultRegistered {
@@ -80,7 +113,7 @@ func Map(definition string, handler Handler) {
 
 }
 
-// TODO: add "help" as a built-in handler that prints the usage
+// TODO: add matchCount or similar to determine which command has the closest match, then print the usage for just that command
 
 // Execute analyzes the arguments given to the program and executes the
 // appropriate command handler function
@@ -112,9 +145,8 @@ func Execute() {
 			}
 		}
 	}
-
 	if !executed {
-		//TODO: print global usage
+		printUsage()
 	}
 
 }
