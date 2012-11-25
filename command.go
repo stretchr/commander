@@ -40,6 +40,7 @@ func makeCommand(definition, description string, handler Handler) *command {
 	c.definition = definition
 	c.handler = handler
 	c.defaultCommand = definition == DefaultCommand
+	c.description = description
 
 	// make the arguments
 
