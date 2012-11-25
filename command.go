@@ -6,18 +6,21 @@ import (
 
 // Handler is a func type the defines the function signature of the function
 // to be called when a command is matched.
-type Handler func(map[string]interface{})
+type Handler func(args map[string]interface{})
 
 // command is a type used to create and manage individual command strings
 type command struct {
 	// definition is the original string contining the command definition
 	definition string
 
-	// arguments is an array of all the arguments in the command string
-	arguments []*argument
+	// description is a string containing a description of this command
+	description string
 
 	// handler is the Handler associated with this command
 	handler Handler
+
+	// arguments is an array of all the arguments in the command string
+	arguments []*argument
 
 	// numOptional contains the number of optional arguments in this command
 	numOptional int
@@ -27,7 +30,7 @@ type command struct {
 }
 
 // makeCommand makes a new Command object and sets it up appropriately
-func makeCommand(definition string, handler Handler) *command {
+func makeCommand(definition, description string, handler Handler) *command {
 
 	if handler == nil {
 		panic("A handler must be defined for each command registered.")

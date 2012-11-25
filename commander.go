@@ -71,10 +71,9 @@ func printUsage(cmd *command) {
 			fmt.Printf("\t %s\n", cmd.definition)
 		}
 	} else {
-		fmt.Printf("Not enough arguments to command \"%s\". Usage:\n", cmd.arguments[0].literal)
+		fmt.Printf("Not enough arguments to command \"%s\". Usage:\n\n", cmd.arguments[0].literal)
 		fmt.Printf("\t %s\n", cmd.definition)
-		//TODO: this
-		//fmt.Printf("\t %s\n", cmd.description)
+		fmt.Printf("\t %s\n", cmd.description)
 	}
 
 }
@@ -84,8 +83,17 @@ func printUsage(cmd *command) {
 func Initialize() {
 	initOnce.Do(func() {
 		sharedCommander = new(Commander)
-		Map("help [arg=(string)]", func(map[string]interface{}) {
-			printUsage(nil)
+		Map("help [arg=(string)]", "Prints help and usage", func(args map[string]interface{}) {
+			printed := false
+			for _, cmd := range sharedCommander.commands {
+				if cmd.arguments[0].literal == args["arg"].(string) {
+					printUsage(cmd)
+					printed = true
+				}
+			}
+			if !printed {
+				printUsage(nil)
+			}
 		})
 	})
 }
@@ -93,7 +101,7 @@ func Initialize() {
 // Map is used to map a definition string to a handler function. If the arguments
 // given on the command line are represented by the definition string, the
 // handler function will be called.
-func Map(definition string, handler Handler) {
+func Map(definition, description string, handler Handler) {
 
 	if sharedCommander == nil {
 		panic("Initialize must be called before Map")
@@ -107,7 +115,7 @@ func Map(definition string, handler Handler) {
 		}
 	}
 
-	newCommand := makeCommand(definition, handler)
+	newCommand := makeCommand(definition, description, handler)
 
 	for _, cmd := range sharedCommander.commands {
 		if cmd.isEqualTo(newCommand) {

@@ -31,7 +31,7 @@ func HandlerFunc(args map[string]interface{}) {
 
 func TestCommand_makeCommand(t *testing.T) {
 
-	c := makeCommand(commandString, HandlerFunc)
+	c := makeCommand(commandString, "", HandlerFunc)
 
 	if assert.NotNil(t, c) {
 		assert.Equal(t, c.definition, commandString)
@@ -49,15 +49,15 @@ func TestCommand_makeCommand(t *testing.T) {
 	}
 
 	assert.Panics(t, func() {
-		_ = makeCommand(commandStringTwoOptionalVariableBad, HandlerFunc)
+		_ = makeCommand(commandStringTwoOptionalVariableBad, "", HandlerFunc)
 	})
 
 	assert.Panics(t, func() {
-		_ = makeCommand(commandStringOptionalBad, HandlerFunc)
+		_ = makeCommand(commandStringOptionalBad, "", HandlerFunc)
 	})
 
 	assert.Panics(t, func() {
-		_ = makeCommand(commandString, nil)
+		_ = makeCommand(commandString, "", nil)
 	})
 
 }
@@ -69,14 +69,14 @@ func repBool(c *command, def []string) bool {
 
 func TestCommand_Represents(t *testing.T) {
 
-	c := makeCommand(commandString, HandlerFunc)
+	c := makeCommand(commandString, "", HandlerFunc)
 
 	assert.True(t, repBool(c, rawCommandArrayOne))
 	assert.True(t, repBool(c, rawCommandArrayTwo))
 	assert.True(t, repBool(c, rawCommandArrayThree))
 	assert.True(t, repBool(c, rawCommandArrayFour))
 
-	c = makeCommand(commandStringTwoOptional, HandlerFunc)
+	c = makeCommand(commandStringTwoOptional, "", HandlerFunc)
 
 	assert.True(t, repBool(c, rawCommandArrayOne))
 	assert.True(t, repBool(c, rawCommandArrayTwo))
@@ -84,7 +84,7 @@ func TestCommand_Represents(t *testing.T) {
 	assert.True(t, repBool(c, rawCommandArrayFour))
 	assert.True(t, repBool(c, rawCommandArrayFive))
 
-	c = makeCommand(commandStringTwoOptionalVariable, HandlerFunc)
+	c = makeCommand(commandStringTwoOptionalVariable, "", HandlerFunc)
 
 	assert.True(t, repBool(c, rawCommandArrayOne))
 	assert.True(t, repBool(c, rawCommandArrayTwo))
@@ -99,8 +99,8 @@ func TestCommand_IsEqualTo(t *testing.T) {
 
 	for i := 0; i < len(commandArray); i++ {
 		for j := 0; j < len(commandArray); j++ {
-			a := makeCommand(commandArray[i], HandlerFunc)
-			a2 := makeCommand(commandArray[j], HandlerFunc)
+			a := makeCommand(commandArray[i], "", HandlerFunc)
+			a2 := makeCommand(commandArray[j], "", HandlerFunc)
 			if commandArray[i] == commandArray[j] {
 				assert.True(t, a.isEqualTo(a2))
 			} else {
