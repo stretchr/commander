@@ -13,6 +13,9 @@ type command struct {
 	// definition is the original string contining the command definition
 	definition string
 
+	// summary is a string containing a short summary of this command
+	summary string
+
 	// description is a string containing a description of this command
 	description string
 
@@ -30,7 +33,7 @@ type command struct {
 }
 
 // makeCommand makes a new Command object and sets it up appropriately
-func makeCommand(definition, description string, handler Handler) *command {
+func makeCommand(definition, summary, description string, handler Handler) *command {
 
 	if handler == nil {
 		panic("A handler must be defined for each command registered.")
@@ -41,6 +44,7 @@ func makeCommand(definition, description string, handler Handler) *command {
 	c.handler = handler
 	c.defaultCommand = definition == DefaultCommand
 	c.description = description
+	c.summary = summary
 
 	// make the arguments
 

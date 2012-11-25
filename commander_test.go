@@ -9,23 +9,23 @@ func TestCommander_Map(t *testing.T) {
 
 	sharedCommander = new(Commander)
 
-	Map(commandString, "", func(map[string]interface{}) {
+	Map(commandString, "", "", func(map[string]interface{}) {
 	})
 
 	assert.Equal(t, len(sharedCommander.commands), 1)
 
-	Map(DefaultCommand, "", func(map[string]interface{}) {
+	Map(DefaultCommand, "", "", func(map[string]interface{}) {
 	})
 
 	assert.Equal(t, len(sharedCommander.commands), 2)
 
 	assert.Panics(t, func() {
-		Map(DefaultCommand, "", func(map[string]interface{}) {
+		Map(DefaultCommand, "", "", func(map[string]interface{}) {
 		})
 	})
 
 	assert.Panics(t, func() {
-		Map(commandString, "", func(map[string]interface{}) {
+		Map(commandString, "", "", func(map[string]interface{}) {
 		})
 	})
 
@@ -38,7 +38,7 @@ func TestCommander_Execute(t *testing.T) {
 
 	called := false
 
-	Map(DefaultCommand, "", func(args map[string]interface{}) {
+	Map(DefaultCommand, "", "", func(args map[string]interface{}) {
 		called = true
 	})
 
@@ -48,7 +48,7 @@ func TestCommander_Execute(t *testing.T) {
 	called = false
 	sharedCommander = new(Commander)
 
-	Map(commandString, "", func(args map[string]interface{}) {
+	Map(commandString, "", "", func(args map[string]interface{}) {
 		called = true
 		assert.Equal(t, len(args), 3)
 		assert.Equal(t, args["kind"], "account")
@@ -64,7 +64,7 @@ func TestCommander_Execute(t *testing.T) {
 	called = false
 	sharedCommander = new(Commander)
 
-	Map(commandStringTwoOptionalVariable, "", func(args map[string]interface{}) {
+	Map(commandStringTwoOptionalVariable, "", "", func(args map[string]interface{}) {
 		called = true
 
 		assert.Equal(t, len(args), 4)
@@ -91,7 +91,7 @@ func TestCommander_NoOptional(t *testing.T) {
 
 	sharedCommander = new(Commander)
 
-	Map(commandStringTwoOptionalVariable, "", func(args map[string]interface{}) {
+	Map(commandStringTwoOptionalVariable, "", "", func(args map[string]interface{}) {
 	})
 
 	incomingArgs = rawCommandArraySeven
@@ -102,14 +102,50 @@ func TestCommander_NoOptional(t *testing.T) {
 
 }
 
+func TestCommander_Real(t *testing.T) {
+
+	Initialize()
+
+	Map(DefaultCommand, "", "", func(args map[string]interface{}) {
+	})
+
+	Map("test [name=(string)]", "", "",
+		func(args map[string]interface{}) {
+		})
+
+	Map("install [name=(string)]", "", "",
+		func(args map[string]interface{}) {
+		})
+
+	Map("vet [name=(string)]", "", "",
+		func(args map[string]interface{}) {
+		})
+
+	Map("exclude name=(string)", "", "",
+		func(args map[string]interface{}) {
+		})
+
+	Map("include name=(string)", "", "",
+		func(args map[string]interface{}) {
+		})
+
+	Map("exclusions", "", "",
+		func(args map[string]interface{}) {
+		})
+
+	incomingArgs = []string{"test"}
+	Execute()
+
+}
+
 /*func TestCommander_PrintUsage(t *testing.T) {
 
 	Initialize()
 
-	Map(commandString, "", func(args map[string]interface{}) {
+	Map(commandString, "", "", func(args map[string]interface{}) {
 	})
 
-	Map(commandStringTwoOptionalVariable, "", func(args map[string]interface{}) {
+	Map(commandStringTwoOptionalVariable, "", "", func(args map[string]interface{}) {
 	})
 
 	incomingArgs = []string{"help"}
@@ -124,7 +160,7 @@ func TestCommander_ClosestMatch(t *testing.T) {
 
 	sharedCommander = new(Commander)
 
-	Map(commandString, "", func(args map[string]interface{}) {
+	Map(commandString, "", "", func(args map[string]interface{}) {
 		t.Error("Shouldn't get here!")
 	})
 

@@ -66,16 +66,28 @@ func printUsage(cmd *command) {
 	}
 
 	if cmd == nil {
-		fmt.Printf("usage: %s <command> [arguments]\n\n", appName)
+		fmt.Printf("\nusage: %s <command> [arguments]\n\n", appName)
 		for _, cmd := range sharedCommander.commands {
-			fmt.Printf("\t %s\n", cmd.definition)
+			if !cmd.isDefaultCommand() {
+				fmt.Printf("    %s - %s\n", cmd.definition, cmd.summary)
+			}
 		}
 	} else {
-		fmt.Printf("Not enough arguments to command \"%s\". Usage:\n\n", cmd.arguments[0].literal)
-		fmt.Printf("\t %s\n", cmd.definition)
-		fmt.Printf("\t %s\n", cmd.description)
+		fmt.Printf("\n\"%s\" usage:\n\n", cmd.arguments[0].literal)
+		fmt.Printf("    %s - %s\n", cmd.definition, cmd.summary)
+		fmt.Printf("    %s\n", cmd.description)
 	}
+	fmt.Println()
 
+}
+
+// moveHelpToEnd moves the help entry to the end of the array for printing
+func moveHelpToEnd() {
+	length := len(sharedCommander.commands)
+
+	for i := 0; i < length-1; i++ {
+		sharedCommander.commands[i], sharedCommander.commands[i+1] = sharedCommander.commands[i+1], sharedCommander.commands[i]
+	}
 }
 
 // Initialize sets up various internal fields to ready the system. If this is not
@@ -83,25 +95,29 @@ func printUsage(cmd *command) {
 func Initialize() {
 	initOnce.Do(func() {
 		sharedCommander = new(Commander)
-		Map("help [arg=(string)]", "Prints help and usage", func(args map[string]interface{}) {
-			printed := false
-			for _, cmd := range sharedCommander.commands {
-				if cmd.arguments[0].literal == args["arg"].(string) {
-					printUsage(cmd)
-					printed = true
+		Map("help [arg=(string)]", "Prints help and usage",
+			"Prints help and usage for the commands. \"help <command>\" will print additional information about the command.",
+			func(args map[string]interface{}) {
+				printed := false
+				if len(args) == 1 {
+					for _, cmd := range sharedCommander.commands {
+						if cmd.arguments[0].literal == args["arg"].(string) {
+							printUsage(cmd)
+							printed = true
+						}
+					}
 				}
-			}
-			if !printed {
-				printUsage(nil)
-			}
-		})
+				if !printed {
+					printUsage(nil)
+				}
+			})
 	})
 }
 
 // Map is used to map a definition string to a handler function. If the arguments
 // given on the command line are represented by the definition string, the
 // handler function will be called.
-func Map(definition, description string, handler Handler) {
+func Map(definition, summary, description string, handler Handler) {
 
 	if sharedCommander == nil {
 		panic("Initialize must be called before Map")
@@ -115,7 +131,7 @@ func Map(definition, description string, handler Handler) {
 		}
 	}
 
-	newCommand := makeCommand(definition, description, handler)
+	newCommand := makeCommand(definition, summary, description, handler)
 
 	for _, cmd := range sharedCommander.commands {
 		if cmd.isEqualTo(newCommand) {
@@ -130,6 +146,7 @@ func Map(definition, description string, handler Handler) {
 // Execute analyzes the arguments given to the program and executes the
 // appropriate command handler function
 func Execute() {
+	moveHelpToEnd()
 
 	executeDefault := false
 	executed := false
@@ -137,8 +154,8 @@ func Execute() {
 	var closestMatch *command
 
 	if len(incomingArgs) == 0 {
-		incomingArgs = os.Args
-		if len(incomingArgs) == 1 {
+		incomingArgs = os.Args[1:]
+		if len(os.Args) == 1 {
 			executeDefault = true
 		}
 	}
