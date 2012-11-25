@@ -102,7 +102,7 @@ func TestCommander_NoOptional(t *testing.T) {
 
 }
 
-func TestCommander_PrintUsage(t *testing.T) {
+/*func TestCommander_PrintUsage(t *testing.T) {
 
 	Initialize()
 
@@ -118,4 +118,18 @@ func TestCommander_PrintUsage(t *testing.T) {
 		Execute()
 	})
 
-}
+}*/
+/*
+func TestCommander_ClosestMatch(t *testing.T) {
+
+	sharedCommander = new(Commander)
+
+	Map(commandString, func(args map[string]interface{}) {
+		t.Error("Shouldn't get here!")
+	})
+
+	incomingArgs = []string{"create"}
+
+	Execute()
+
+}*/

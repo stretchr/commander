@@ -2,7 +2,6 @@ package commander
 
 import (
 	"github.com/stretchrcom/testify/assert"
-	"strings"
 	"testing"
 )
 
@@ -12,11 +11,11 @@ const (
 	commandStringTwoOptional            = "create kind=project|account name=(string) [description=(string)] [domain=(string)]"
 	commandStringTwoOptionalVariable    = "create kind=project|account name=(string) [description=(string)] [domains=(string)...]"
 	commandStringTwoOptionalVariableBad = "create kind=project|account name=(string) [description=(string)...] [domains=(string)]"
-	rawCommandStringOne                 = "create project stretchr"
-	rawCommandStringTwo                 = "create account mat"
 )
 
 var (
+	rawCommandArrayOne   = []string{"create", "project", "stretchr"}
+	rawCommandArrayTwo   = []string{"create", "account", "mat"}
 	rawCommandArrayThree = []string{"create", "project", "stretchr", "Awesome service!"}
 	rawCommandArrayFour  = []string{"create", "account", "mat", "Crazy Brit!"}
 	rawCommandArrayFive  = []string{"create", "account", "mat", "Crazy Brit!", "localhost"}
@@ -63,31 +62,36 @@ func TestCommand_makeCommand(t *testing.T) {
 
 }
 
+func repBool(c *command, def []string) bool {
+	represents, _ := c.represents(def)
+	return represents
+}
+
 func TestCommand_Represents(t *testing.T) {
 
 	c := makeCommand(commandString, HandlerFunc)
 
-	assert.True(t, c.represents(strings.Split(rawCommandStringOne, " ")))
-	assert.True(t, c.represents(strings.Split(rawCommandStringTwo, " ")))
-	assert.True(t, c.represents(rawCommandArrayThree))
-	assert.True(t, c.represents(rawCommandArrayFour))
+	assert.True(t, repBool(c, rawCommandArrayOne))
+	assert.True(t, repBool(c, rawCommandArrayTwo))
+	assert.True(t, repBool(c, rawCommandArrayThree))
+	assert.True(t, repBool(c, rawCommandArrayFour))
 
 	c = makeCommand(commandStringTwoOptional, HandlerFunc)
 
-	assert.True(t, c.represents(strings.Split(rawCommandStringOne, " ")))
-	assert.True(t, c.represents(strings.Split(rawCommandStringTwo, " ")))
-	assert.True(t, c.represents(rawCommandArrayThree))
-	assert.True(t, c.represents(rawCommandArrayFour))
-	assert.True(t, c.represents(rawCommandArrayFive))
+	assert.True(t, repBool(c, rawCommandArrayOne))
+	assert.True(t, repBool(c, rawCommandArrayTwo))
+	assert.True(t, repBool(c, rawCommandArrayThree))
+	assert.True(t, repBool(c, rawCommandArrayFour))
+	assert.True(t, repBool(c, rawCommandArrayFive))
 
 	c = makeCommand(commandStringTwoOptionalVariable, HandlerFunc)
 
-	assert.True(t, c.represents(strings.Split(rawCommandStringOne, " ")))
-	assert.True(t, c.represents(strings.Split(rawCommandStringTwo, " ")))
-	assert.True(t, c.represents(rawCommandArrayThree))
-	assert.True(t, c.represents(rawCommandArrayFour))
-	assert.True(t, c.represents(rawCommandArrayFive))
-	assert.True(t, c.represents(rawCommandArraySix))
+	assert.True(t, repBool(c, rawCommandArrayOne))
+	assert.True(t, repBool(c, rawCommandArrayTwo))
+	assert.True(t, repBool(c, rawCommandArrayThree))
+	assert.True(t, repBool(c, rawCommandArrayFour))
+	assert.True(t, repBool(c, rawCommandArrayFive))
+	assert.True(t, repBool(c, rawCommandArraySix))
 
 }
 

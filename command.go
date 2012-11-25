@@ -19,6 +19,9 @@ type command struct {
 	// handler is the Handler associated with this command
 	handler Handler
 
+	// numOptional contains the number of optional arguments in this command
+	numOptional int
+
 	// defaultCommand holds whether this is the default command or not
 	defaultCommand bool
 }
@@ -46,10 +49,13 @@ func makeCommand(definition string, handler Handler) *command {
 		if !c.arguments[argumentIndex].isOptional() && optionalFound {
 			panic("An optional argument may not precede a required argument")
 		} else if c.arguments[argumentIndex].isOptional() {
+			c.numOptional++
 			optionalFound = true
 		}
-		if c.arguments[argumentIndex].isVariable() && argumentIndex != len(argumentStrings)-1 {
-			panic("A variable argument may only appear at the end of a command string")
+		if c.arguments[argumentIndex].isVariable() {
+			if argumentIndex != len(argumentStrings)-1 {
+				panic("A variable argument may only appear at the end of a command string")
+			}
 		}
 	}
 
@@ -58,38 +64,46 @@ func makeCommand(definition string, handler Handler) *command {
 }
 
 // represents determines if this command represents the array of arguments
-func (c *command) represents(rawArgs []string) bool {
+func (c *command) represents(rawArgs []string) (bool, int) {
 
 	argIndex := 0
 	for rawArgIndex, _ := range rawArgs {
 
 		if argIndex == len(c.arguments)-1 && rawArgIndex != len(rawArgs)-1 {
 			if !c.arguments[argIndex].isVariable() {
-				return false
+				return false, argIndex
 			} else {
-				return true
+				argIndex++
+				return true, argIndex
 			}
 		}
 
 		// this is an optional argument. If we don't get a match, keep trying
 		if c.arguments[argIndex].isOptional() {
 			if c.arguments[argIndex].represents(rawArgs[rawArgIndex]) {
-				rawArgIndex++
 				argIndex++
+				rawArgIndex++
 			} else {
 				rawArgIndex++
 			}
 		} else {
 			if c.arguments[argIndex].represents(rawArgs[rawArgIndex]) {
-				rawArgIndex++
 				argIndex++
+				rawArgIndex++
 			} else {
-				return false
+				return false, argIndex
 			}
 		}
 	}
-	return true
 
+	// We've made it this far without an explicit failure, but that doesn't mean
+	// every argument has been satisfied. Check our
+
+	if argIndex == len(c.arguments) || argIndex >= len(c.arguments)-c.numOptional {
+		return true, argIndex
+	}
+
+	return false, argIndex
 }
 
 func (c *command) isEqualTo(cmd *command) bool {

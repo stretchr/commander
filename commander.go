@@ -58,17 +58,23 @@ func commandMap(cmd *command, args []string) map[string]interface{} {
 }
 
 // printUsage prints the usage of the program
-func printUsage() {
+func printUsage(cmd *command) {
 
 	appName := path.Base(os.Args[0])
 	if extension := path.Ext(os.Args[0]); extension != "" {
 		appName = strings.Replace(appName, extension, "", 1)
 	}
 
-	fmt.Printf("usage: %s <command> [arguments]\n\n", appName)
-
-	for _, cmd := range sharedCommander.commands {
+	if cmd == nil {
+		fmt.Printf("usage: %s <command> [arguments]\n\n", appName)
+		for _, cmd := range sharedCommander.commands {
+			fmt.Printf("\t %s\n", cmd.definition)
+		}
+	} else {
+		fmt.Printf("Not enough arguments to command \"%s\". Usage:\n", cmd.arguments[0].literal)
 		fmt.Printf("\t %s\n", cmd.definition)
+		//TODO: this
+		//fmt.Printf("\t %s\n", cmd.description)
 	}
 
 }
@@ -79,7 +85,7 @@ func Initialize() {
 	initOnce.Do(func() {
 		sharedCommander = new(Commander)
 		Map("help [arg=(string)]", func(map[string]interface{}) {
-			printUsage()
+			printUsage(nil)
 		})
 	})
 }
@@ -121,6 +127,8 @@ func Execute() {
 
 	executeDefault := false
 	executed := false
+	closestMatchCount := 0
+	var closestMatch *command
 
 	if len(incomingArgs) == 0 {
 		incomingArgs = os.Args
@@ -138,15 +146,20 @@ func Execute() {
 		}
 	} else {
 		for _, cmd := range sharedCommander.commands {
-			if cmd.represents(incomingArgs) {
+			if represents, matchCount := cmd.represents(incomingArgs); represents {
 				args := commandMap(cmd, incomingArgs)
 				cmd.handler(args)
 				executed = true
+			} else {
+				if matchCount > closestMatchCount {
+					closestMatchCount = matchCount
+					closestMatch = cmd
+				}
 			}
 		}
 	}
 	if !executed {
-		printUsage()
+		printUsage(closestMatch)
 	}
 
 }
