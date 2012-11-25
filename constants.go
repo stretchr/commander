@@ -2,23 +2,23 @@ package commander
 
 const (
 
-	// DelimiterArgumentSeparator is the string that separates arguments
+	// delimiterArgumentSeparator is the string that separates arguments
 	// in a command line.
-	DelimiterArgumentSeparator string = " "
+	delimiterArgumentSeparator string = " "
 
-	// DelimiterEquality is the string that indicates an identifier is associated
+	// delimiterEquality is the string that indicates an identifier is associated
 	// with a capture group or literal
-	DelimiterEquality string = "="
+	delimiterEquality string = "="
 
-	// DelimiterListItems is the string that separates a group of literals,
+	// delimiterListItems is the string that separates a group of literals,
 	// indicating that it is a list
-	DelimiterListItems string = "|"
+	delimiterListItems string = "|"
 )
 
 const (
-	SubmatchKeyKind     string = "kind"
-	SubmatchKeyType     string = "type"
-	SubmatchKeyOpen     string = "open"
-	SubmatchKeyClose    string = "close"
-	SubmatchKeyVariable string = "variable"
+	submatchKeyKind     string = "kind"
+	submatchKeyType     string = "type"
+	submatchKeyOpen     string = "open"
+	submatchKeyClose    string = "close"
+	submatchKeyVariable string = "variable"
 )

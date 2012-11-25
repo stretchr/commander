@@ -23,7 +23,7 @@ var (
 
 	// captureRegex represents the regexp for captures.
 	captureRegex = regexp.MustCompile(fmt.Sprintf(`^(?P<%s>[\[])?(?P<%s>[^=|()\[\]]+)=\((?P<%s>[^=|()\[\]]+)\)(?P<%s>\.\.\.)?(?P<%s>[\]])?$`,
-		SubmatchKeyOpen, SubmatchKeyKind, SubmatchKeyType, SubmatchKeyVariable, SubmatchKeyClose))
+		submatchKeyOpen, submatchKeyKind, submatchKeyType, submatchKeyVariable, submatchKeyClose))
 	// captureSubmatchNames represents the regexp for capture sub matches.
 	captureSubmatchNames = captureRegex.SubexpNames()
 )
@@ -191,20 +191,20 @@ func (a *argument) parseArgument() {
 	case literalRegex.MatchString(a.rawArg):
 		a.literal = a.rawArg
 	case listRegex.MatchString(a.rawArg):
-		parts := strings.Split(a.rawArg, DelimiterEquality)
+		parts := strings.Split(a.rawArg, delimiterEquality)
 		a.identifier = parts[0]
-		a.list = strings.Split(parts[1], DelimiterListItems)
+		a.list = strings.Split(parts[1], delimiterListItems)
 	case captureRegex.MatchString(a.rawArg):
 		submatches := captureRegex.FindStringSubmatch(a.rawArg)
 		submatchMap := mapSubmatchNames(captureSubmatchNames, submatches)
 
-		a.identifier = submatchMap[SubmatchKeyKind]
-		a.captureType = submatchMap[SubmatchKeyType]
+		a.identifier = submatchMap[submatchKeyKind]
+		a.captureType = submatchMap[submatchKeyType]
 
-		if containsKey(submatchMap, SubmatchKeyOpen) && containsKey(submatchMap, SubmatchKeyClose) {
+		if containsKey(submatchMap, submatchKeyOpen) && containsKey(submatchMap, submatchKeyClose) {
 			a.optional = true
 		}
-		if containsKey(submatchMap, SubmatchKeyVariable) {
+		if containsKey(submatchMap, submatchKeyVariable) {
 			a.variable = true
 		}
 	}

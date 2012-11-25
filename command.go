@@ -44,11 +44,11 @@ func makeCommand(definition, description string, handler Handler) *command {
 
 	// make the arguments
 
-	argumentStrings := strings.Split(definition, DelimiterArgumentSeparator)
+	argumentStrings := strings.Split(definition, delimiterArgumentSeparator)
 	c.arguments = make([]*argument, len(argumentStrings))
 	optionalFound := false
 
-	for argumentIndex, value := range strings.Split(definition, DelimiterArgumentSeparator) {
+	for argumentIndex, value := range strings.Split(definition, delimiterArgumentSeparator) {
 		c.arguments[argumentIndex] = makeArgument(value)
 		if !c.arguments[argumentIndex].isOptional() && optionalFound {
 			panic("An optional argument may not precede a required argument")
