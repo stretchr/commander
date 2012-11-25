@@ -127,8 +127,6 @@ func Map(definition, description string, handler Handler) {
 
 }
 
-// TODO: add matchCount or similar to determine which command has the closest match, then print the usage for just that command
-
 // Execute analyzes the arguments given to the program and executes the
 // appropriate command handler function
 func Execute() {

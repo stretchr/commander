@@ -1,6 +1,7 @@
 package commander
 
 import (
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -21,9 +22,8 @@ var (
 	listRegex = regexp.MustCompile(`^[^=|()\[\]]+=[^=|()\[\]]+(?:\|[^=|()\[\]]+)+$`)
 
 	// captureRegex represents the regexp for captures.
-	// TODO: Is there an easy way to use the constants in this string too?
-	captureRegex = regexp.MustCompile(`^(?P<open>[\[])?(?P<kind>[^=|()\[\]]+)=\((?P<type>[^=|()\[\]]+)\)(?P<variable>\.\.\.)?(?P<close>[\]])?$`)
-
+	captureRegex = regexp.MustCompile(fmt.Sprintf(`^(?P<%s>[\[])?(?P<%s>[^=|()\[\]]+)=\((?P<%s>[^=|()\[\]]+)\)(?P<%s>\.\.\.)?(?P<%s>[\]])?$`,
+		SubmatchKeyOpen, SubmatchKeyKind, SubmatchKeyType, SubmatchKeyVariable, SubmatchKeyClose))
 	// captureSubmatchNames represents the regexp for capture sub matches.
 	captureSubmatchNames = captureRegex.SubexpNames()
 )
@@ -187,8 +187,6 @@ func mapSubmatchNames(submatchNames []string, submatches []string) map[string]st
 
 func (a *argument) parseArgument() {
 
-	// TODO: replace string literals with string constants
-
 	switch {
 	case literalRegex.MatchString(a.rawArg):
 		a.literal = a.rawArg
@@ -203,10 +201,10 @@ func (a *argument) parseArgument() {
 		a.identifier = submatchMap[SubmatchKeyKind]
 		a.captureType = submatchMap[SubmatchKeyType]
 
-		if containsKey(submatchMap, "open") && containsKey(submatchMap, "close") {
+		if containsKey(submatchMap, SubmatchKeyOpen) && containsKey(submatchMap, SubmatchKeyClose) {
 			a.optional = true
 		}
-		if containsKey(submatchMap, "variable") {
+		if containsKey(submatchMap, SubmatchKeyVariable) {
 			a.variable = true
 		}
 	}

@@ -6,13 +6,15 @@ const (
 	// in a command line.
 	DelimiterArgumentSeparator string = " "
 
+	// DelimiterEquality is the string that indicates an identifier is associated
+	// with a capture group or literal
 	DelimiterEquality string = "="
 
+	// DelimiterListItems is the string that separates a group of literals,
+	// indicating that it is a list
 	DelimiterListItems string = "|"
 )
 
-// TODO: once the SubmatchKey* constants are used in the regex, simplify them
-// by making them one character?
 const (
 	SubmatchKeyKind     string = "kind"
 	SubmatchKeyType     string = "type"
