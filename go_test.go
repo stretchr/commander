@@ -6,7 +6,7 @@ import (
 )
 
 func TestGo(t *testing.T) {
-	sharedCommander = new(Commander)
+	sharedCommander = new(commander)
 	incomingArgs = []string{}
 
 	called := false
@@ -20,7 +20,7 @@ func TestGo(t *testing.T) {
 	assert.True(t, called)
 
 	called = false
-	sharedCommander = new(Commander)
+	sharedCommander = new(commander)
 
 	Map(commandString, "", "", func(args map[string]interface{}) {
 		called = true
@@ -36,7 +36,7 @@ func TestGo(t *testing.T) {
 	assert.True(t, called)
 
 	called = false
-	sharedCommander = new(Commander)
+	sharedCommander = new(commander)
 
 	Map(commandStringTwoOptionalVariable, "", "", func(args map[string]interface{}) {
 		called = true

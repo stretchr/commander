@@ -7,7 +7,7 @@ import (
 
 func TestCommander_Map(t *testing.T) {
 
-	sharedCommander = new(Commander)
+	sharedCommander = new(commander)
 
 	Map(commandString, "", "", func(map[string]interface{}) {
 	})
@@ -33,7 +33,7 @@ func TestCommander_Map(t *testing.T) {
 
 func TestCommander_execute(t *testing.T) {
 
-	sharedCommander = new(Commander)
+	sharedCommander = new(commander)
 	incomingArgs = []string{}
 
 	called := false
@@ -46,7 +46,7 @@ func TestCommander_execute(t *testing.T) {
 	assert.True(t, called)
 
 	called = false
-	sharedCommander = new(Commander)
+	sharedCommander = new(commander)
 
 	Map(commandString, "", "", func(args map[string]interface{}) {
 		called = true
@@ -62,7 +62,7 @@ func TestCommander_execute(t *testing.T) {
 	assert.True(t, called)
 
 	called = false
-	sharedCommander = new(Commander)
+	sharedCommander = new(commander)
 
 	Map(commandStringTwoOptionalVariable, "", "", func(args map[string]interface{}) {
 		called = true
@@ -89,7 +89,7 @@ func TestCommander_execute(t *testing.T) {
 
 func TestCommander_NoOptional(t *testing.T) {
 
-	sharedCommander = new(Commander)
+	sharedCommander = new(commander)
 
 	Map(commandStringTwoOptionalVariable, "", "", func(args map[string]interface{}) {
 	})

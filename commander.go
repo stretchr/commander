@@ -17,7 +17,7 @@ const DefaultCommand = ""
 
 // Commander provides methods and functionality to create a command line
 // interface quickly and easily.
-type Commander struct {
+type commander struct {
 	// commands contains all the mapped commands
 	commands []*command
 
@@ -29,7 +29,7 @@ type Commander struct {
 var initOnce sync.Once
 
 // sharedCommander is the shared instance of the Commander type
-var sharedCommander *Commander
+var sharedCommander *commander
 
 // incomingArgs is the array of arguments to be analyzed. This exists to facilitate
 // testing.
@@ -94,7 +94,7 @@ func moveHelpToEnd() {
 // called, Commander will not function.
 func initialize() {
 	initOnce.Do(func() {
-		sharedCommander = new(Commander)
+		sharedCommander = new(commander)
 		Map("help [arg=(string)]", "Prints help and usage",
 			"Prints help and usage for the commands. \"help <command>\" will print additional information about the command.",
 			func(args map[string]interface{}) {
