@@ -36,7 +36,7 @@ In the `main` func (in the `main` package) you call the `commander.Go` func like
 
 {handler} - Handler is the func that will be called when the user initiates this command.
 
-Handler Func
+Handler Func 
 
 The Handler func is a normal func that takes a `map[string]interface{}` as its only argument, and
 returns nothing.
