@@ -5,6 +5,8 @@ package commander
 //
 // Usage
 //
+// Just pass a simple func to the commander.Go command:
+//
 //     commander.Go(func(){
 //     
 //	     // make calls to commander.Map here
