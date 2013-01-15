@@ -21,7 +21,7 @@ In the `main` func (in the `main` package) you call the `commander.Go` func like
       // wrap all commander.Map calls in the Go call...
       commander.Go(func(){
 
-	      // map something
+        // map something
         commander.Map({definition}, {summary}, {description}, {handler})
 
       })
