@@ -107,5 +107,12 @@ The `args` map would contain:
 NOTE: `please` is the actual command name, `create` is what tells Commander to use the specified
 handler func, and anything following that are the arguments relevant to that command.
 
+Because we used `kind=project|account`, any other value will NOT match that command.  So these
+calls would NOT hit the same handler func:
+
+    please create logs mylogname
+
+In order to provide that functionality, another Map call would have to be made.
+
 */
 package commander
