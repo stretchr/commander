@@ -12,6 +12,9 @@ an attractive alternative to the [flag](http://golang.org/pkg/flag/) package.
 
     func main() {
 
+    	/*
+    		Use the commander.Go wrapper to initialise and execute your commands
+    	*/
       commander.Go(func(){
 
       	/*
