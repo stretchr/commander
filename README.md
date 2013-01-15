@@ -1,5 +1,5 @@
 Commander - Control your lines
-=========
+========= 
 
 Commander is a Go package that makes it easy to build and maintain command-line tools and provides
 an attractive alternative to the [flag](http://golang.org/pkg/flag/) package.
