@@ -9,7 +9,7 @@ package commander
 //
 //     commander.Go(func(){
 //     
-//	     // make calls to commander.Map here
+//       // make calls to commander.Map here
 //     
 //     })
 func Go(mappings func()) {
