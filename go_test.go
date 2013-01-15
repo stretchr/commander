@@ -32,7 +32,7 @@ func TestGo(t *testing.T) {
 
 	incomingArgs = rawCommandArrayFour
 
-	Execute()
+	execute()
 	assert.True(t, called)
 
 	called = false
@@ -55,7 +55,7 @@ func TestGo(t *testing.T) {
 
 	incomingArgs = rawCommandArraySix
 
-	Execute()
+	execute()
 	assert.True(t, called)
 
 	called = false

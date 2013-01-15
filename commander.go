@@ -90,9 +90,9 @@ func moveHelpToEnd() {
 	}
 }
 
-// Initialize sets up various internal fields to ready the system. If this is not
+// initialize sets up various internal fields to ready the system. If this is not
 // called, Commander will not function.
-func Initialize() {
+func initialize() {
 	initOnce.Do(func() {
 		sharedCommander = new(Commander)
 		Map("help [arg=(string)]", "Prints help and usage",
@@ -143,9 +143,9 @@ func Map(definition, summary, description string, handler Handler) {
 
 }
 
-// Execute analyzes the arguments given to the program and executes the
+// execute analyzes the arguments given to the program and executes the
 // appropriate command handler function
-func Execute() {
+func execute() {
 	moveHelpToEnd()
 
 	executeDefault := false

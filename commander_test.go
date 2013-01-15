@@ -31,7 +31,7 @@ func TestCommander_Map(t *testing.T) {
 
 }
 
-func TestCommander_Execute(t *testing.T) {
+func TestCommander_execute(t *testing.T) {
 
 	sharedCommander = new(Commander)
 	incomingArgs = []string{}
@@ -42,7 +42,7 @@ func TestCommander_Execute(t *testing.T) {
 		called = true
 	})
 
-	Execute()
+	execute()
 	assert.True(t, called)
 
 	called = false
@@ -58,7 +58,7 @@ func TestCommander_Execute(t *testing.T) {
 
 	incomingArgs = rawCommandArrayFour
 
-	Execute()
+	execute()
 	assert.True(t, called)
 
 	called = false
@@ -81,7 +81,7 @@ func TestCommander_Execute(t *testing.T) {
 
 	incomingArgs = rawCommandArraySix
 
-	Execute()
+	execute()
 	assert.True(t, called)
 
 	called = false
@@ -97,14 +97,14 @@ func TestCommander_NoOptional(t *testing.T) {
 	incomingArgs = rawCommandArraySeven
 
 	assert.NotPanics(t, func() {
-		Execute()
+		execute()
 	})
 
 }
 
 func TestCommander_Real(t *testing.T) {
 
-	Initialize()
+	initialize()
 
 	Map(DefaultCommand, "", "", func(args map[string]interface{}) {
 	})
@@ -134,7 +134,7 @@ func TestCommander_Real(t *testing.T) {
 		})
 
 	incomingArgs = []string{"test"}
-	Execute()
+	execute()
 
 }
 
@@ -151,7 +151,7 @@ func TestCommander_Real(t *testing.T) {
 	incomingArgs = []string{"help"}
 
 	assert.NotPanics(t, func() {
-		Execute()
+		execute()
 	})
 
 }*/
@@ -166,6 +166,6 @@ func TestCommander_ClosestMatch(t *testing.T) {
 
 	incomingArgs = []string{"create"}
 
-	Execute()
+	execute()
 
 }*/
