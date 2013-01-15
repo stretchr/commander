@@ -31,7 +31,7 @@ an attractive alternative to the [flag](http://golang.org/pkg/flag/) package.
 
     }
 
-The above code will create a tool that supports a single `create` command, with two arguments.
+The above code will create a tool that supports a single `create` command, with two string arguments.
 
 ## Get started
 
