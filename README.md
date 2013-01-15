@@ -28,4 +28,4 @@ an attractive alternative to the [flag](http://golang.org/pkg/flag/) package.
 
     }
 
- Check out the [API Documentation](http://godoc.org/github.com/stretchrcom/commander)
+  * Check out the [API Documentation](http://godoc.org/github.com/stretchrcom/commander).
