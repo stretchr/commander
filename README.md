@@ -12,21 +12,21 @@ an attractive alternative to the [flag](http://golang.org/pkg/flag/) package.
 
     func main() {
 
-    	/*
-    		Use the commander.Go wrapper to initialise and execute your commands
-    	*/
+      /*
+        Use the commander.Go wrapper to initialise and execute your commands
+      */
       commander.Go(func(){
 
-      	/*
-      		Map the create command
-      	*/
+        /*
+          Map the create command
+        */
         commander.Map("create kind=(string) name=(string)", 
           "Creates something",
           "Creates a thing of the specified kind, with the specified name.",
           func(args map[string]interface{}){
-     
+      
             // TODO: create something of type args["kind"] called args["name"]
-  
+      
           }
         )
 
