@@ -1,7 +1,8 @@
 /*
 Commander - Control your lines
 
-Commander is a Go package that makes it easy to build and maintain command-line tools.
+Commander is a Go package that makes it easy to build and maintain command-line tools and provides
+an attractive alternative to the `flag` package http://golang.org/pkg/flag/.
 
 Usage
 
@@ -85,6 +86,10 @@ If we wanted to provide a command-line tool that allowed you to create two types
 could use the following mapping definition:
 
     create kind=project|account name=(string) [description=(string)]
+
+We are stating that we want to map a `create` command that takes 2 or 3 arguments.  `kind`, the first argument
+can be a string literal of either "project" or "account".  `name`, the second argument, must be a string.  And
+optionally a third string argument called `description` can be specified (if it is not, the mapping will still apply).
 
 If we compile this into a Go command called 'please', then in our Terminal all of these lines
 would hit this mapping:
