@@ -36,6 +36,21 @@ an attractive alternative to the [flag](http://golang.org/pkg/flag/) package.
 
 The above code will create a tool that supports a single `create` command, with two string arguments.
 
+### Commander vs Flag
+
+Depending on how you would like users to interact with your command-line tool, you should make a choice between
+Commander and the built-in `flag` package.
+
+#### Flag
+
+    mycommand -action=create -name=Mat -age=29
+    mycommand -action=update -id=123 -name=Mat
+
+#### Coommander
+
+    mycommand create Mat 29
+    mycommand update 123 Mat
+
 ## Get started
 
   * Check out the [API Documentation](http://godoc.org/github.com/stretchrcom/commander).
