@@ -43,10 +43,14 @@ Commander and the built-in `flag` package.
 
 #### Flag
 
+Flag provides traditional interactions where you set parameters by name.  For example;
+
     mycommand -action=create -name=Mat -age=29
     mycommand -action=update -id=123 -name=Mat
 
 #### Coommander
+
+Coommander provides a more modern and easy-to-read-and-write alternative.  For example;
 
     mycommand create Mat 29
     mycommand update 123 Mat
