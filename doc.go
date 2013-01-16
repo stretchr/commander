@@ -4,6 +4,21 @@ Commander - Control your lines
 Commander is a Go package that makes it easy to build and maintain command-line tools and provides
 an attractive alternative to the `flag` package http://golang.org/pkg/flag/.
 
+Commander vs Flag
+
+Depending on how you would like users to interact with your command-line tool, you should make a choice between
+Commander and the built-in `flag` package.
+
+Flag:
+
+    mycommand -action=create -name=Mat -age=29
+    mycommand -action=update -id=123 -name=Mat
+
+Coommander:
+
+    mycommand create Mat 29
+    mycommand update 123 Mat
+
 Usage
 
 Commander works by mapping handler funcs to command signatures, much like matching URL routes
