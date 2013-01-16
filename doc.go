@@ -19,6 +19,15 @@ Coommander provides a more modern and easy-to-read-and-write alternative:
     mycommand create Mat 29
     mycommand update 123 Mat
 
+Features
+
+Commander provides the following features:
+
+  * Automatic usage help generation
+  * Typed arguments
+  * Optional arguments
+  * Literal (and list literal) arguments
+
 Usage
 
 Commander works by mapping handler funcs to command signatures, much like matching URL routes
