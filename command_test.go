@@ -19,7 +19,7 @@ var (
 	rawCommandArrayThree = []string{"create", "project", "stretchr", "Awesome service!"}
 	rawCommandArrayFour  = []string{"create", "account", "mat", "Crazy Brit!"}
 	rawCommandArrayFive  = []string{"create", "account", "mat", "Crazy Brit!", "localhost"}
-	rawCommandArraySix   = []string{"create", "account", "mat", "Crazy Brit!", "localhost", "127.0.0.1", "google.com"}
+	rawCommandArraySix   = []string{"create", "account", "mat", "Awesome Brit!", "localhost", "127.0.0.1", "google.com"}
 	rawCommandArraySeven = []string{"create", "account", "mat"}
 
 	cmdArray = []string{commandString, commandStringTwoOptional}
