@@ -153,11 +153,14 @@ func execute() {
 	closestMatchCount := 0
 	var closestMatch *command
 
-	if len(incomingArgs) == 0 {
+	if incomingArgs == nil {
 		incomingArgs = os.Args[1:]
 		if len(os.Args) == 1 {
 			executeDefault = true
 		}
+	} else {
+		// this is a test: ignore actual flags
+		executeDefault = len(incomingArgs) == 0
 	}
 
 	if executeDefault {
