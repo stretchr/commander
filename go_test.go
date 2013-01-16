@@ -44,7 +44,7 @@ func TestGo(t *testing.T) {
 		assert.Equal(t, len(args), 4)
 		assert.Equal(t, args["kind"], "account")
 		assert.Equal(t, args["name"], "mat")
-		assert.Equal(t, args["description"], "Crazy Brit!")
+		assert.Equal(t, args["description"], "Awesome Brit!")
 		if assert.Equal(t, len(args["domains"].([]string)), 3) {
 			domains := args["domains"].([]string)
 			assert.Equal(t, domains[0], "localhost")
