@@ -48,9 +48,9 @@ Flag provides traditional interactions where you set parameters by name.  For ex
     mycommand -action=create -name=Mat -age=29
     mycommand -action=update -id=123 -name=Mat
 
-#### Coommander
+#### Commander
 
-Coommander provides a more modern and easy-to-read-and-write alternative.  For example;
+Commander provides a more modern and easy-to-read-and-write alternative.  For example;
 
     mycommand create Mat 29
     mycommand update 123 Mat
