@@ -39,7 +39,7 @@ In the `main` func (in the `main` package) you call the `commander.Go` func like
 
     import (
       "github.com/stretchrcom/commander"
-    ) 
+    )
 
     func main() {
 
@@ -61,7 +61,7 @@ In the `main` func (in the `main` package) you call the `commander.Go` func like
 
 {handler} - Handler is the func that will be called when the user initiates this command.
 
-Handler Func 
+Handler Func
 
 The Handler func is a normal func that takes a `map[string]interface{}` as its only argument, and
 returns nothing.
@@ -122,7 +122,7 @@ would hit this mapping:
     please create project ProjectName
     please create account MyAccount
 
-The associated handler func would be called, and the `args` map would contain the appropriate 
+The associated handler func would be called, and the `args` map would contain the appropriate
 values.  For example, for:
 
     please create project ProjectName ProjectDesc
@@ -142,6 +142,12 @@ calls would NOT hit the same handler func:
     please create logs mylogname
 
 In order to provide that functionality, another Map call would have to be made.
+
+Interactive Mode
+
+If you would like to enable an interactive console for your application to run your mapped commands,
+call SetInteractive(true) inside your Go() call. This will enable the interactive console when no arguments
+are provided to the program.
 
 */
 package commander
