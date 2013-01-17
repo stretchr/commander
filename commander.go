@@ -23,6 +23,12 @@ type commander struct {
 
 	// defaultRegistered stores whether a default has been registered or not
 	defaultRegistered bool
+
+	// interactive stores whether or not to use the interactive console
+	interactive bool
+
+	// appName stores the name of the currently running application
+	appName string
 }
 
 // initOnce is used to guarantee that the sharedCommander is initialized only once.
@@ -60,13 +66,10 @@ func commandMap(cmd *command, args []string) map[string]interface{} {
 // printUsage prints the usage of the program
 func printUsage(cmd *command) {
 
-	appName := path.Base(os.Args[0])
-	if extension := path.Ext(os.Args[0]); extension != "" {
-		appName = strings.Replace(appName, extension, "", 1)
-	}
-
 	if cmd == nil {
-		fmt.Printf("\nusage: %s <command> [arguments]\n\n", appName)
+		if !sharedCommander.interactive {
+			fmt.Printf("\nusage: %s <command> [arguments]\n\n", sharedCommander.appName)
+		}
 		for _, cmd := range sharedCommander.commands {
 			if !cmd.isDefaultCommand() {
 				fmt.Printf("    %s - %s\n", cmd.definition, cmd.summary)
@@ -95,6 +98,12 @@ func moveHelpToEnd() {
 func initialize() {
 	initOnce.Do(func() {
 		sharedCommander = new(commander)
+
+		sharedCommander.appName = path.Base(os.Args[0])
+		if extension := path.Ext(os.Args[0]); extension != "" {
+			sharedCommander.appName = strings.Replace(sharedCommander.appName, extension, "", 1)
+		}
+
 		Map("help [arg=(string)]", "Prints help and usage",
 			"Prints help and usage for the commands. \"help <command>\" will print additional information about the command.",
 			func(args map[string]interface{}) {
@@ -112,6 +121,63 @@ func initialize() {
 				}
 			})
 	})
+}
+
+// execute fires up the commander system, either launching the interactive
+// console, or executing the command provided by the arguments
+func execute() {
+
+	moveHelpToEnd()
+
+	if sharedCommander.interactive && len(os.Args) == 1 {
+		launchConsole()
+		return
+	}
+
+	if incomingArgs == nil {
+		incomingArgs = os.Args[1:]
+	}
+
+	// handle the arguments passed during program invocation
+	handleInvocation(incomingArgs)
+
+}
+
+// handleInvocation analyzes the arguments and executes the
+// appropriate command handler function
+func handleInvocation(args []string) {
+
+	executed := false
+	closestMatchCount := 0
+	var closestMatch *command
+
+	executeDefault := len(args) == 0
+
+	if executeDefault {
+		for _, cmd := range sharedCommander.commands {
+			if cmd.isDefaultCommand() {
+				cmd.handler(nil)
+				executed = true
+			}
+		}
+	} else {
+		for _, cmd := range sharedCommander.commands {
+			if represents, matchCount := cmd.represents(args); represents {
+				argMap := commandMap(cmd, args)
+				cmd.handler(argMap)
+				executed = true
+			} else {
+				if matchCount > closestMatchCount {
+					closestMatchCount = matchCount
+					closestMatch = cmd
+				}
+			}
+		}
+	}
+	if !executed {
+		printUsage(closestMatch)
+	}
+
 }
 
 // Map is used to map a definition string to a handler function. If the arguments
@@ -140,52 +206,5 @@ func Map(definition, summary, description string, handler Handler) {
 	}
 
 	sharedCommander.commands = append(sharedCommander.commands, newCommand)
-
-}
-
-// execute analyzes the arguments given to the program and executes the
-// appropriate command handler function
-func execute() {
-	moveHelpToEnd()
-
-	executeDefault := false
-	executed := false
-	closestMatchCount := 0
-	var closestMatch *command
-
-	if incomingArgs == nil {
-		incomingArgs = os.Args[1:]
-		if len(os.Args) == 1 {
-			executeDefault = true
-		}
-	} else {
-		// this is a test: ignore actual flags
-		executeDefault = len(incomingArgs) == 0
-	}
-
-	if executeDefault {
-		for _, cmd := range sharedCommander.commands {
-			if cmd.isDefaultCommand() {
-				cmd.handler(nil)
-				executed = true
-			}
-		}
-	} else {
-		for _, cmd := range sharedCommander.commands {
-			if represents, matchCount := cmd.represents(incomingArgs); represents {
-				args := commandMap(cmd, incomingArgs)
-				cmd.handler(args)
-				executed = true
-			} else {
-				if matchCount > closestMatchCount {
-					closestMatchCount = matchCount
-					closestMatch = cmd
-				}
-			}
-		}
-	}
-	if !executed {
-		printUsage(closestMatch)
-	}
 
 }
