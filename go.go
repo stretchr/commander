@@ -8,9 +8,9 @@ package commander
 // Just pass a simple func to the commander.Go command:
 //
 //     commander.Go(func(){
-//     
+//
 //       // make calls to commander.Map here
-//     
+//
 //     })
 func Go(mappings func()) {
 
