@@ -38,7 +38,7 @@ In the `main` func (in the `main` package) you call the `commander.Go` func like
     package main
 
     import (
-      "github.com/stretchrcom/commander"
+      "github.com/stretchr/commander"
     )
 
     func main() {

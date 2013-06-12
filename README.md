@@ -1,5 +1,5 @@
 Commander - Drop and Give Me 20
-========= 
+=========
 
 Commander is a Go package that makes it easy to build and maintain command-line tools and provides
 an attractive alternative to the [flag](http://golang.org/pkg/flag/) package.
@@ -7,7 +7,7 @@ an attractive alternative to the [flag](http://golang.org/pkg/flag/) package.
     package main
 
     import (
-      "github.com/stretchrcom/commander"
+      "github.com/stretchr/commander"
     )
 
     func main() {
@@ -20,13 +20,13 @@ an attractive alternative to the [flag](http://golang.org/pkg/flag/) package.
         /*
           Map the create command
         */
-        commander.Map("create kind=(string) name=(string)", 
+        commander.Map("create kind=(string) name=(string)",
           "Creates something",
           "Creates a thing of the specified kind, with the specified name.",
           func(args map[string]interface{}){
-      
+
             // TODO: create something of type args["kind"] called args["name"]
-      
+
           }
         )
 
@@ -57,7 +57,7 @@ Commander provides a more modern and easy-to-read-and-write alternative.  For ex
 
 ## Get started
 
-  * Check out the [API Documentation](http://godoc.org/github.com/stretchrcom/commander).
+  * Check out the [API Documentation](http://godoc.org/github.com/stretchr/commander).
 
 ## Features
 
