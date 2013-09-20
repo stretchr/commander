@@ -1,12 +1,13 @@
 package commander
 
 import (
+	"github.com/stretchr/objx"
 	"strings"
 )
 
 // Handler is a func type the defines the function signature of the function
 // to be called when a command is matched.
-type Handler func(args map[string]interface{})
+type Handler func(args objx.Map)
 
 // command is a type used to create and manage individual command strings
 type command struct {

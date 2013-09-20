@@ -1,6 +1,7 @@
 package commander
 
 import (
+	"github.com/stretchr/objx"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -25,7 +26,7 @@ var (
 	cmdArray = []string{commandString, commandStringTwoOptional}
 )
 
-func HandlerFunc(args map[string]interface{}) {
+func HandlerFunc(args objx.Map) {
 
 }
 

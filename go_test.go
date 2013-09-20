@@ -1,6 +1,7 @@
 package commander
 
 import (
+	"github.com/stretchr/objx"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -12,7 +13,7 @@ func TestGo(t *testing.T) {
 	called := false
 
 	Go(func() {
-		Map(DefaultCommand, "", "", func(args map[string]interface{}) {
+		Map(DefaultCommand, "", "", func(args objx.Map) {
 			called = true
 		})
 	})
@@ -22,7 +23,7 @@ func TestGo(t *testing.T) {
 	called = false
 	sharedCommander = new(commander)
 
-	Map(commandString, "", "", func(args map[string]interface{}) {
+	Map(commandString, "", "", func(args objx.Map) {
 		called = true
 		assert.Equal(t, len(args), 3)
 		assert.Equal(t, args["kind"], "account")
@@ -38,7 +39,7 @@ func TestGo(t *testing.T) {
 	called = false
 	sharedCommander = new(commander)
 
-	Map(commandStringTwoOptionalVariable, "", "", func(args map[string]interface{}) {
+	Map(commandStringTwoOptionalVariable, "", "", func(args objx.Map) {
 		called = true
 
 		assert.Equal(t, len(args), 4)

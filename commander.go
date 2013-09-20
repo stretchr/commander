@@ -2,6 +2,7 @@ package commander
 
 import (
 	"fmt"
+	"github.com/stretchr/objx"
 	"os"
 	"path"
 	"strings"
@@ -106,7 +107,7 @@ func initialize() {
 
 		Map("help [arg=(string)]", "Prints help and usage",
 			"Prints help and usage for the commands. \"help <command>\" will print additional information about the command.",
-			func(args map[string]interface{}) {
+			func(args objx.Map) {
 				printed := false
 				if len(args) == 1 {
 					for _, cmd := range sharedCommander.commands {
